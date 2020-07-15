@@ -1,7 +1,7 @@
 import  React, { Component, useState } from 'react';
 import axios from 'axios';
 
-function Register() {
+function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -13,7 +13,7 @@ function Register() {
 
         // If not display an error in the error header
 
-        axios.post('http://localhost:8001/auth/register', {email: email, password: password})
+        axios.post('http://localhost:8001/auth/login', {email: email, password: password})
             .then((response)=>{
                 console.log(response);
                 //Navigate to login screen
@@ -28,7 +28,7 @@ function Register() {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <span className='formTextRegister'>Register</span>
+                <span className='formTextLogin'>Login</span>
                 <br/>
                 <input 
                     type='text' 
@@ -49,4 +49,4 @@ function Register() {
     }
 
 
-export default Register;
+export default Login;
