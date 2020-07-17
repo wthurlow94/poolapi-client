@@ -8,7 +8,7 @@ function Register() {
 
     var handleSubmit = (event) => {
         event.preventDefault();
-
+        console.log('foobar')
         //validate/sanitise input (is email an email. does password meet criteria)
 
         // If not display an error in the error header
