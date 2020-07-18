@@ -3,13 +3,16 @@ import { AuthContext } from '../context/AuthContext'
 import { Button, Container, Col, Form, Row } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import Axios from 'axios';
+import {ErrorContext} from '../context/ErrorContext'
 
 export default function CreateMatch() {
     const [opponents, setOpponents] = React.useState([])
     const [selectedOpponent, setSelectedOpponent] = React.useState('{}');
     const [match, setMatch] = React.useState('{}')
-
+    
+    const [error,setError] = React.useContext(ErrorContext)
     const auth = React.useContext(AuthContext);
+    
     var user = auth.getUser();
 
      React.useEffect(() => {
@@ -33,7 +36,6 @@ export default function CreateMatch() {
             playerOne: user._id,
             playerTwo: selectedOpponent._id 
          }
-         console.log(data);
         Axios.post('http://localhost:8001/matches',data,{
             headers: {
                 'authorization': 'Bearer ' + localStorage.getItem('token')
@@ -42,8 +44,11 @@ export default function CreateMatch() {
             console.log(response);
             setMatch(response.data.match)
          })
-         .catch( error => {
-            console.log(error.response)
+         .catch( errorMsg => {
+            console.log(errorMsg.response)
+            setError({message: errorMsg.response.data.message, 
+                      status: errorMsg.response.status})
+            console.log(error);
          }
          )
 

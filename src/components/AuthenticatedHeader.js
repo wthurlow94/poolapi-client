@@ -18,6 +18,7 @@ export default function AuthenticatedHeader () {
         <Nav>
             <Nav.Link as={Link} to='/matches'>Matches</Nav.Link>
             <Nav.Link as={Link} to='/newmatch'>New Match</Nav.Link>
+            <Nav.Link as={Link} to='/stats'>Stats</Nav.Link>
             <Nav.Link as={Link} to='/logout'>Logout</Nav.Link>
         </Nav>
 

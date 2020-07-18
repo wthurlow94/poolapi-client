@@ -29,12 +29,17 @@ export default function Matches() {
         var started = new Date(match.started).toUTCString();
         var resulted = '';
         var opponent = '';
-
+        var winner = ''
         if (match.playerOne._id === user._id) {
             opponent = match.playerTwo.email
         } else {
             opponent = match.playerOne.email
         }
+
+        if (match.winner !== undefined) {
+            winner = match.winner.email
+        }
+        
 
 
         if (match.resulted) {
@@ -48,7 +53,7 @@ export default function Matches() {
                     </td>
                 <td>{opponent}</td>
                 <td>{resulted}</td>
-                <td>{match.winner}</td>
+                <td>{winner}</td>
             </tr>
         )
     })
@@ -59,7 +64,7 @@ export default function Matches() {
 
         <div>
             <h3>Matches for {user.email}</h3>
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive='sm'>
                 <thead>
                     <tr>
                         <th>

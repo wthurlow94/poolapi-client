@@ -2,14 +2,15 @@ import React from 'react';
 import { AuthContext } from '../context/AuthContext'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
 
-function Login() {
+function Login(props) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
 
-    const auth = React.useContext(AuthContext)
+    const context = React.useContext(AuthContext)
     var handleSubmit = (event) => {
         event.preventDefault();
-        auth.login(email, password)
+
+        context.login(email, password)
 
     };
 
