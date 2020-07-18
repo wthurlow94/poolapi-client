@@ -1,14 +1,19 @@
 import React from 'react';
 import './css/App.css';
-import { HashRouter as Router, Link, Route, Switch } from 'react-router-dom'
+import { HashRouter as Router, Switch } from 'react-router-dom'
 import Register from './components/Register'
 import Login from './components/Login'
 import Matches from './components/Matches'
+import CreateMatch from './components/CreateMatch'
 import Logout from './components/Logout'
-import { AuthProvider, AuthContext, AuthConsumer } from './context/AuthContext'
+import { AuthProvider, AuthConsumer } from './context/AuthContext'
 import UnauthenticatedRoute from './components/UnauthenticatedRoute';
 import AuthenticatedRoute from './components/AuthenticatedRoute';
-
+import AuthenticatedHeader from './components/AuthenticatedHeader';
+import UnauthenticatedHeader from './components/UnauthenticatedHeader';
+import Splash from './components/Splash'
+import Match from './components/Match'
+import {Navbar} from 'react-bootstrap'
 
 
 
@@ -20,61 +25,28 @@ function App() {
         <Router>
           <AuthConsumer>
             {({ isAuth }) => (
-              <nav>
-                <ul>
-                  {isAuth ? '' :(
-                  <li>
-                    <Link to="/">Register</Link>
-                  </li>
+              <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+              <Navbar.Brand href="/">Pool.io</Navbar.Brand>
+              <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+              <Navbar.Collapse id="responsive-navbar-nav">
+                  {isAuth ? 
+                  (<AuthenticatedHeader />) : (
+                    <UnauthenticatedHeader />
                   )}
-                  {isAuth ? (
-                    <li>
-                      <Link to='/matches'>Matches</Link>
-                    </li>
-                  ) : ''
-                  }
-                  {isAuth ? (
-                    <li>
-                      <Link to="/logout">Logout</Link>
-                    </li>
-                  ) : (
-                      <li>
-                        <Link to="/login">Login</Link>
-                      </li>
-                    )}
 
-                </ul>
-              </nav>
+              </Navbar.Collapse>
+              </Navbar>
             )}
           </AuthConsumer>
 
           <Switch>
-            <UnauthenticatedRoute exact path="/" component={Register}/>
-             
-
+            <UnauthenticatedRoute exact path="/" component={Splash} />
+            <UnauthenticatedRoute path="/register" component={Register} />
             <UnauthenticatedRoute path="/login" component={Login} />
-            
-
-
-            <AuthenticatedRoute path="/matches" component={Matches}/>
-           
-
-
-            <AuthenticatedRoute path="/logout" component={Logout}/>
-              
-
-            {/* <Route path="/matches">
-              <h1>matches</h1>
-            </Route> */}
-            {/* <Route path="/logout">
-              <AuthConsumer>
-                {({ isAuth, login, logout }) => (
-                  <form onSubmit={logout}>
-                    <button>logout</button>
-                  </form>
-                )}
-              </AuthConsumer> */}
-            {/* </Route> */}
+            <AuthenticatedRoute exact path="/matches" component={Matches} />
+            <AuthenticatedRoute path="/newmatch" component={CreateMatch} />
+            <AuthenticatedRoute path="/matches/:_id" component={Match} />
+            <AuthenticatedRoute path="/logout" component={Logout} />
           </Switch>
         </Router>
       </div>

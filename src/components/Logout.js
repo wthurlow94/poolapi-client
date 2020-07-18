@@ -1,6 +1,5 @@
 import React from 'react'
-import { AuthContext, AuthConsumer } from '../context/AuthContext'
-import { Redirect } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
 
 export default function Logout() {
     const auth = React.useContext(AuthContext)
@@ -11,14 +10,12 @@ export default function Logout() {
     }
 
     return (
-        
-                        <form onSubmit={handleSubmit}>
-                            <span className='formTextLogout'>Logout</span>
-                            <button>Logout</button>
+        <form onSubmit={handleSubmit}>
+            <span className='formTextLogout'>Logout</span>
+            <br />
+            <button>Logout</button>
 
-                        </form>
-                    
+        </form>
 
-           
     )
 }
