@@ -18,12 +18,13 @@ import ErrorNotification from './components/ErrorNotification'
 import { ErrorContext } from './context/ErrorContext'
 import axios from 'axios'
 import Stats from './components/Stats'
+
 function App() {
-  const [user, setUser] = React.useState('{}')
-  const [isAuth, setIsAuth] = React.useState(false);
+  const [user, setUser] = React.useState(localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '{}')
+  const [isAuth, setIsAuth] = React.useState(localStorage.getItem('token') ? true : false);
   const [error, setError] = React.useState(null);
 
-
+  console.log('user: '+ localStorage.getItem('user'));
 
   var getUser = () => {
     return user;
@@ -37,16 +38,26 @@ function App() {
         setUser(response.data.user)
         setIsAuth(true)
         localStorage.setItem('token', response.data.token)
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        setError(null);
 
       })
       .catch((errorMsg) => {
         console.log(errorMsg.response);
-        // Display an Error Message?
-        console.log(errorMsg);
-        setError({
-          message: errorMsg.response.data.message,
-          status: errorMsg.response.status
-        })
+        // Display an Error Message
+        
+        
+        if(errorMsg.response === undefined) {
+          setError({
+            message: 'Service is currently down',
+            status: 503
+          })
+        } else {
+          setError({
+            message: errorMsg.response.data.message,
+            status: errorMsg.response.status
+          })
+        }
       })
 
   }
@@ -55,6 +66,7 @@ function App() {
   var logout = () => {
     setIsAuth(false)
     localStorage.removeItem('token');
+    localStorage.removeItem('user')
     setUser('{}')
   }
 

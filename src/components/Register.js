@@ -1,12 +1,17 @@
 import React from 'react';
 import axios from 'axios';
-
+import { Redirect } from 'react-router-dom'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap'
-
+import { ErrorContext } from '../context/ErrorContext'
 function Register() {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [registrationComplete, setRegistrationComplete] = React.useState(false);
+
+    const [error, setError] = React.useContext(ErrorContext)
+
+
 
     var handleSubmit = (event) => {
         event.preventDefault();
@@ -18,10 +23,22 @@ function Register() {
             .then((response) => {
                 console.log(response);
                 //Navigate to login screen
+                setRegistrationComplete(true);
+                setError(null);
             })
-            .catch((error) => {
-                console.log(error.toJSON());
+            .catch((errorMsg) => {
                 // Display an Error Message?
+                if (errorMsg.response === undefined) {
+                    setError({
+                        message: 'Service is currently down',
+                        status: 503
+                    })
+                } else {
+                    setError({
+                        message: errorMsg.response.data.message,
+                        status: errorMsg.response.status
+                    })
+                }
             })
 
     };
@@ -30,52 +47,29 @@ function Register() {
 
 
     return (
-        <Container>
-            
-            <Row className="justify-content-md-center">
-                <Col>
-                    <span>Register</span>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId='registerFormEmail'>
-                            {/* <Form.Label>Email address</Form.Label> */}
-                            <Form.Control type="email" placeholder="Enter email" value={email} onChange={(event) => {setEmail(event.target.value)}} />
-                        </Form.Group>
-                        <Form.Group controlId="registerFormPassword">
-                            {/* <Form.Label>Password</Form.Label> */}
-                            <Form.Control type="password" placeholder="Password" value={password} onChange={(event) => {setPassword(event.target.value)}}/>
-                        </Form.Group>
-                        <Button variant="primary" type="submit">
-                            Register
-                         </Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
+        registrationComplete ? (<Redirect to='/login' />) : (
+            <Container>
 
+                <Row className="justify-content-md-center">
+                    <Col>
+                        <span>Register</span>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId='registerFormEmail'>
+                                <Form.Control type="email" placeholder="Enter email" value={email} onChange={(event) => { setEmail(event.target.value) }} />
+                            </Form.Group>
+                            <Form.Group controlId="registerFormPassword">
+                                <Form.Control type="password" placeholder="Password" value={password} onChange={(event) => { setPassword(event.target.value) }} />
+                            </Form.Group>
+                            <Button disabled={email === '' || password === '' ? true : false} variant="primary" type="submit">
+                                Register
+                         </Button>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+        )
 
     )
-
-    // return (
-    //     <div>
-    //         <form onSubmit={handleSubmit}>
-    //             <span className='formTextRegister'>Register</span>
-    //             <br/>
-    //             <input 
-    //                 type='text' 
-    //                 placeholder='Enter email' 
-    //                 value={email} 
-    //                 onChange={(event) => {setEmail(event.target.value)}}/>
-    //             <br/>
-    //             <input 
-    //                 type='password' 
-    //                 placeholder='Enter password' 
-    //                 value={password} 
-    //                 onChange={(event) => {setPassword(event.target.value)}}/>
-    //             <br/>
-    //             <button>Submit</button>
-    //         </form>
-    //     </div>
-    // )
 }
 
 

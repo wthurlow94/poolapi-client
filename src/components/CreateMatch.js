@@ -4,6 +4,7 @@ import { Button, Container, Col, Form, Row } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import Axios from 'axios';
 import {ErrorContext} from '../context/ErrorContext'
+import PlayerCard from '../components/PlayerCard'
 
 export default function CreateMatch() {
     const [opponents, setOpponents] = React.useState([])
@@ -48,8 +49,14 @@ export default function CreateMatch() {
             console.log(errorMsg.response)
             setError({message: errorMsg.response.data.message, 
                       status: errorMsg.response.status})
-            console.log(error);
-         }
+
+            if(errorMsg.response.status == 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                auth.isAuth = false
+            }
+        }
+         
          )
 
 
@@ -102,7 +109,7 @@ export default function CreateMatch() {
 
 
                 <Col>
-                    {user.email}
+                    <PlayerCard player={user} />
 
                 </Col>
                 <Col>
@@ -111,7 +118,7 @@ export default function CreateMatch() {
                         <p>No opponent Selected</p>
 
                     ) : (
-                            <p>{selectedOpponent.email}</p>
+                            <PlayerCard player={selectedOpponent} />
                         )}
 
 
@@ -121,6 +128,7 @@ export default function CreateMatch() {
 
 
             </Row>
+            <br/>
             <Row>
                 <Col>
                     <Button disabled={selectedOpponent === '{}' || selectedOpponent === undefined ? true : false } onClick={handleStartMatchClick}>Start Match</Button>

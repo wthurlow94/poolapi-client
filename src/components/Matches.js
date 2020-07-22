@@ -3,10 +3,12 @@ import { AuthContext } from '../context/AuthContext'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Table } from 'react-bootstrap'
+import { ErrorContext } from '../context/ErrorContext';
 
 
 export default function Matches() {
     const [matches, setMatches] = React.useState([]);
+    const [error,setError] = React.useContext(ErrorContext)
     const auth = React.useContext(AuthContext);
     var user = auth.getUser();
 
@@ -17,12 +19,23 @@ export default function Matches() {
                     'authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
+            .catch((errorMsg) => {
+                console.log(errorMsg);
+                //setError({message: errorMsg.response.data.message, 
+                 //   status: errorMsg.response.status})
+
+                   // if(errorMsg.response.status === 401){
+                        
+                   //         auth.logout();
+                    //}
+                
+            })
 
             setMatches(result.data.matches);
 
         }
         getMatches();
-    }, [user._id]);
+    }, [user._id, auth, setError]);
 
     const rows = matches.map(match => {
 
@@ -36,8 +49,12 @@ export default function Matches() {
             opponent = match.playerOne.email
         }
 
+        console.log(match.winner);
         if (match.winner !== undefined) {
+           
             winner = match.winner.email
+        } else {
+            winner = 'Match Voided'
         }
         
 
